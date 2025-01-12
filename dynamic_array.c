@@ -75,11 +75,6 @@ int remove_at (int index){
 }
 int main(){
     ptr=(int*)calloc(1,sizeof (int));  
-  /*
-
-  remove at
-  remove
-  */
     add(1);
     add(8);
     add(2);
