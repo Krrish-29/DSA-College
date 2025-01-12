@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include<stdlib.h>
-// create a linked list function 
-/*Insertion: Add a new node at the beginning or end of the list.
+/* create a linked list function 
+Insertion: Add a new node at the beginning or end of the list.
 at head at tail printlist
 Deletion: Remove a node from the list.
 Search: Find a specific node in the list.
