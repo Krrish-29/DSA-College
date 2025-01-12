@@ -1,7 +1,6 @@
-// condition - elements should be greater than zero.
 #include<stdio.h>
 #include<stdlib.h>
-#include<stdbool.h>
+#include<stdbool.h>// condition - elements should be greater than zero.
 int *ptr;
 int len=0,capacity=1;
 void add(int element){
@@ -14,11 +13,13 @@ void add(int element){
 }
 void clear(){
     free(ptr);
-    ptr=calloc(capacity,sizeof(int));
+    ptr=calloc(1,sizeof(int));
     len=0;
 }
 void set(int index,int element){
-    ptr[index]=element;
+    if(index<capacity){
+        ptr[index]=element;
+    }
 }
 int size(){
     return len;
@@ -33,7 +34,6 @@ bool contains (int target){
     for(int i=0;i<len;i++){
         if(ptr[i]==target){
             return true;
-            break;
         }
     }
     return false;
