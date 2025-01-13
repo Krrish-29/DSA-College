@@ -19,7 +19,6 @@ int remove_element (int element){
     if(len==0){
         return -1;
     }
-    int index;
     for(int i=0;i<len;i++){
         if(dynamicarray[i]==element){
             int temp=dynamicarray[i];
