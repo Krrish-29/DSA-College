@@ -1,28 +1,64 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>// condition - elements should be greater than zero.
-int *ptr;
+int *dynamicarray;
 int len=0,capacity=1;
 void add(int element){
-    if(len+1>capacity){
+    if(len>=capacity){
         capacity*=2;
-        ptr=realloc(ptr,capacity*sizeof(int));
+        dynamicarray=realloc(dynamicarray,capacity*sizeof(int));
+        if (!dynamicarray) { 
+            fprintf(stderr, "Memory allocation failed\n"); 
+            exit(1); 
+        }
     }
-    ptr[len]=element;
+    dynamicarray[len]=element;
     len++;
 }
-void clear(){
-    free(ptr);
-    ptr=calloc(1,sizeof(int));
-    len=0;
+int remove_element (int element){
+    if(len==0){
+        return -1;
+    }
+    int index;
+    for(int i=0;i<len;i++){
+        if(dynamicarray[i]==element){
+            int temp=dynamicarray[i];
+            for(int j=i;j<len-1;j++){
+                dynamicarray[j]=dynamicarray[j+1];
+            }
+            len--;
+            return temp;
+        }
+    }
+    return -1;
 }
-void set(int index,int element){
-    if(index<capacity){
-        ptr[index]=element;
+int remove_at (int index){
+    if(len>index){
+        int temp=dynamicarray[index];
+        for(int i=index;i<len-1;i++){
+            dynamicarray[i]=dynamicarray[i+1];
+        }
+        len--;
+        return temp;
+    }
+    else{
+        return -1;
     }
 }
-int size(){
-    return len;
+void clear(){
+    free(dynamicarray);
+    capacity=1;
+    len=0;
+    dynamicarray=(int*)calloc(capacity,sizeof(int));
+    if (!dynamicarray) { 
+        fprintf(stderr, "Memory allocation failed\n"); 
+        exit(1); 
+    }
+}
+void set(int index,int element){
+    if(index<len){
+        dynamicarray[index]=element;
+    }
 }
 bool isEmpty(){
     if(len==0){
@@ -32,49 +68,28 @@ bool isEmpty(){
 }
 bool contains (int target){
     for(int i=0;i<len;i++){
-        if(ptr[i]==target){
+        if(dynamicarray[i]==target){
             return true;
         }
     }
     return false;
 }
 int get(int index){
-    if(index>len){
-        return -1;
-    }
-    return ptr[index];
-}
-void printfarray(){
-    for(int i=0;i<len;i++){
-        printf("%d\n",ptr[i]);
-    }
-}
-int remove_element (int element){
-    if(len==0){
-        return -1;
-    }
-    for(int i=0;i<len;i++){
-        if(ptr[i]==element){
-            int temp=ptr[i];
-            ptr[i]=0;
-            return temp;
-        }
+    if(index<len){
+        return dynamicarray[index];
     }
     return -1;
 }
-int remove_at (int index){
-    if(len>index){
-        int  temp=ptr[index];
-        ptr[index]=0;
-        return temp;
+int size(){
+    return len;
+}
+void printfarray(){
+    for(int i=0;i<len;i++){
+        printf("%d\n",dynamicarray[i]);
     }
-    else{
-        return -1;
-    }
-    
 }
 int main(){
-    ptr=(int*)calloc(1,sizeof (int));  
+    dynamicarray=(int*)calloc(1,sizeof (int));  
     add(1);
     add(8);
     add(2);
