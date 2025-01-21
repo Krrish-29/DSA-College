@@ -1,4 +1,5 @@
-/* //Static array implementation
+/* 
+//Static array implementation
 // Push: Adds an element to the top of the stack.
 // Pop: Removes and returns the top element from the stack.
 // Peek/Top: Returns the top element without removing it.
@@ -69,9 +70,10 @@ int main(){
     Push(&stack,6);
     Push(&stack,2);
 
-}*/
-
-/* //Dynamic array implementation
+}
+*/
+/*
+//Dynamic array implementation
 // Initialize Stack: Set up the initial size and allocate memory for the array.
 // X Resize: Adjust the size of the array dynamically (usually doubling its size when the stack is full).
 // Push: Add an element to the stack, resizing the array if necessary.
@@ -166,3 +168,15 @@ int main(){
     printf("%d\n",getSize(&stack));
 }
 */
+/*
+
+*/
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct Node{
+    int data;
+    struct Node* next;
+}Node;
+typedef struct linkedlist{
+    Node* head;
+}linkedlist;
