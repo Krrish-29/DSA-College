@@ -18,38 +18,43 @@ void operand_push(int data){
         printf("Overflow");
         return;
     }
-    operand_stack[++x]=data;
+    operand_stack[++y]=data;
 
 }
 // int 
 // char
 //evaluate
 int parse(char expression[buffer]){
-    int n1=0,n2=0;
     for(int i=0;i<strlen(expression)-1;i++){
-        if(expression[i]=='+'||expression[i]=='-'||expression[i]=='*'||expression[i]=='/'||expression[i]=='%'){
+        if(expression[i]=='+'||expression[i]=='-'||expression[i]=='*'||expression[i]=='/'||expression[i]=='%'||expression[0]=='('||expression[0]==')'){
             operator_push(expression[i]);
+            i++;
         }
-        else if( (((int)(expression[i])==32) && (i+1<strlen(expression)-1)) && () ){
-
+        else{// if((i+1<strlen(expression)-1) && (expression[i]!='+'||expression[i]!='-'||expression[i]!='*'||expression[i]!='/'||expression[i]!='%')){
+            int n1=0,n2=0,temp[buffer];
+            for(i;expression[i]!='\n'||expression[0]==' ';i++){
+                temp[n1];
+            }
         }
+        
     }
 }
-
-
-
-
+void expression_identification(char expression[]){
+    if(expression[0]=='+'||expression[0]=='-'||expression[0]=='*'||expression[0]=='/'||expression[0]=='%'){
+        printf("The expression is Prefix");
+    }
+    else if (expression[strlen(expression)-2]=='+'||expression[strlen(expression)-2]=='-'||expression[strlen(expression)-2]=='*'||expression[strlen(expression)-2]=='/'||expression[strlen(expression)-2]=='%'){
+        printf("The expression is Postfix");
+    }
+    else{
+        printf("The expression is Infix");
+    }
+}
 int main(){
     char expression[buffer];
     printf("Please enter the Prefix or poatfix expression needed to be evaluated");
     fgets(expression,buffer,stdin);
-    if(expression[0]=='+'||expression[0]=='-'||expression[0]=='*'||expression[0]=='/'||expression[0]=='%'){
-        printf("The expression is Prefix");
-    }
-    else{
-        strrev(expression);
-        printf("The expression is Postfix");
-    }
-    int result=parse(expression);
-    printf("The result of the expression is %d",result);
+    expression_identification(expression);
+    // int result=parse(expression);
+    // printf("The result of the expression is %d",result);
 }
