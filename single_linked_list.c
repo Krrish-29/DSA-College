@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include<stdlib.h>
+#include<stdbool.h>
 /* create a linked list function 
 Insertion: Add a new node at the beginning or end of the list.
 at head at tail printlist
@@ -90,6 +91,65 @@ void deleteNode(linkedlist*list,int data){
         current=current->next;
     }
 }
-int main(){
-    return 0;
+bool isEmpty(linkedlist*list){
+    if(list->head==NULL){
+        return true;
+    }
+    return false;
+}
+Node *getNode(linkedlist*list,int index){
+    Node*current=list->head;
+    int indice=0;
+    if(getSize(list)>=index+1){
+        while(current->next!=NULL&&indice<=index){
+            current=current->next;
+            indice++;
+        }
+        return current;
+    }
+    printf("Invaild Index");
+    return current;
+}
+int search(linkedlist*list,int data){
+    Node*current=list->head;
+    int index=0;
+    if(list->head==NULL|list->head->data==data){
+        return index;
+    }
+    while(current->next!=NULL&&current->next->data==data){
+        current=current->next;
+        index++;
+    }
+    return index;
+}
+void InsertAt(linkedlist*list,int index){
+    Node*current=list->head;
+    if(getSize(list)>=index+1){
+        while(current=current->next){
+
+        }
+    }
+}
+void deleteNodeAt(linkedlist*list,int index){
+    if(list->head==NULL){
+        return;
+    }
+    // if(list->head-){
+    //     Node*temp=list->head;
+    //     list->head=list->head->next;
+    //     free(temp);
+    //     return;
+    // }
+    // Node*current=list->head;
+    // while(current->next!=NULL&&current->next->data!=data){
+    //     current=current->next;
+    // }
+    // if(current->next==NULL){
+    //     return;
+    // }
+    // else{
+    //     Node*temp=current->next;
+    //     current->next=current->next->next;
+    //     free(temp);
+    // }
 }
