@@ -46,7 +46,7 @@ void insertAtTail(linkedlist*list,int data){
 int getSize(linkedlist*list){
     int count=0;
     Node*current=list->head;
-    while(current->next!=NULL){
+    while(current!=NULL){
         count++;
         current=current->next;
     }
@@ -64,10 +64,12 @@ Node*getTail(linkedlist*list){
 }
 void printlist(linkedlist*list){
     Node*current=list->head;
+    printf("The list is:\n");
     while(current->next!=NULL){
         printf("%d\n",current->data);
         current=current->next;
     }
+    printf("%d\n",current->data);
     printf("\n");
 }
 void deleteNode(linkedlist*list,int data){
@@ -113,43 +115,63 @@ Node *getNode(linkedlist*list,int index){
 int search(linkedlist*list,int data){
     Node*current=list->head;
     int index=0;
-    if(list->head==NULL|list->head->data==data){
-        return index;
-    }
-    while(current->next!=NULL&&current->next->data==data){
+    while(current!=NULL&&current->data!=data){
         current=current->next;
         index++;
     }
+    if(current==NULL) return -1;
     return index;
 }
-void InsertAt(linkedlist*list,int index){
-    Node*current=list->head;
-    if(getSize(list)>=index+1){
-        while(current=current->next){
-
+void InsertAt(linkedlist*list,int index,int data){
+    if(getSize(list)>=index+1&&index>=0){
+        Node*newNode=(Node*)calloc(1,sizeof(Node));
+        newNode->data=data;
+        Node*current=list->head;
+        for(int indice=index-1;indice>0;indice--){
+            current=current->next;
         }
+        newNode->next=current->next;
+        current->next=newNode;
+        return;
     }
+    printf("Invalid Index");
 }
 void deleteNodeAt(linkedlist*list,int index){
     if(list->head==NULL){
         return;
     }
-    // if(list->head-){
-    //     Node*temp=list->head;
-    //     list->head=list->head->next;
-    //     free(temp);
-    //     return;
-    // }
-    // Node*current=list->head;
-    // while(current->next!=NULL&&current->next->data!=data){
-    //     current=current->next;
-    // }
-    // if(current->next==NULL){
-    //     return;
-    // }
-    // else{
-    //     Node*temp=current->next;
-    //     current->next=current->next->next;
-    //     free(temp);
-    // }
+    Node*current=list->head;
+    if(getSize(list)>=index+1&&index>=0){
+        for(int indice=index-1;indice>0;indice--){
+            current=current->next;
+        }
+        Node*temp=current->next;
+        current->next=current->next->next;
+        free(temp);
+        return;
+    }
+}
+int main(){
+    void *x=createlinkedlist();
+    printf("%d\n\n",isEmpty(x));
+    insertAtHead(x,2);
+    insertAtTail(x,5);
+    insertAtTail(x,7);
+    insertAtHead(x,4);
+    insertAtTail(x,9);
+    printlist(x);
+    InsertAt(x,3,6);
+    printlist(x);
+    deleteNode(x,8);
+    deleteNode(x,5);
+    printlist(x);
+    deleteNodeAt(x,4);
+    printlist(x);
+    Node*y=getHead(x);
+    printf("%d\n",y->data);
+    Node*z=getTail(x);
+    printf("%d\n",z->data);
+    printf("%d\n",getSize(x));
+    printf("%d\n",isEmpty(x));
+    printf("%d\n",search(x,7));
 }
