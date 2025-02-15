@@ -44,9 +44,9 @@ void insertAtTail(linkedlist*list,int data){
     }
 }
 int getSize(linkedlist*list){
-    int count=0;
+    int count=1;
     Node*current=list->head;
-    while(current!=NULL){
+    while(current->next!=NULL){
         count++;
         current=current->next;
     }
