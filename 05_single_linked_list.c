@@ -22,55 +22,112 @@ linkedlist* createlinkedlist(){
     list->head=NULL;
     return list;
 }
+int getSize(linkedlist*list){
+    int count=0;
+    Node*current=list->head;
+    while(current!=NULL){
+        count++;
+        current=current->next;
+    }
+    return count;
+}
+int getHead(linkedlist*list){
+    if(list->head==NULL) return -1;
+    return list->head->data;
+}
+int getTail(linkedlist*list){
+    if(list->head==NULL) return -1;
+    Node*current=list->head;
+    while(current->next!=NULL){
+        current=current->next;
+    }
+    return current->data;
+}
+Node *getNode(linkedlist*list,int index){
+    Node*current=list->head;
+    int indice=0;
+    if(getSize(list)>=index+1&&index>=0){
+        while(current!=NULL&&indice<index){
+            current=current->next;
+            indice++;
+        }
+        return current;
+    }
+    printf("Invaild Index\nThe head of the list is:");
+    return current;
+}
+void printlist(linkedlist*list){
+    if(list->head==NULL){
+        printf("The list is empty\n");
+        return ;
+    }
+    Node*current=list->head;
+    printf("The list is:\n");
+    while(current!=NULL){
+        printf("%d\n",current->data);
+        current=current->next;
+    }
+    printf("\n");
+}
+bool isEmpty(linkedlist*list){
+    if (list->head==NULL){
+        return true;
+    }else{
+        return false;
+    }
+}
+int search(linkedlist*list,int data){
+    Node*current=list->head;
+    int index=0;
+    while(current!=NULL){
+        if(current->data==data) return index;
+        current=current->next;
+        index++;
+    }
+    return -1;
+}
 void insertAtHead(linkedlist*list,int data){
-    Node*newnode=(Node*)calloc(1,sizeof(Node));
-    newnode->data=data;
-    newnode->next=list->head;
-    list->head=newnode;
+    Node*newNode=(Node*)calloc(1,sizeof(Node));
+    newNode->data=data;
+    newNode->next=list->head;
+    list->head=newNode;
 }
 void insertAtTail(linkedlist*list,int data){
-    Node*newnode=(Node*)calloc(1,sizeof(Node));
-    newnode->data=data;
-    newnode->next=NULL;
+    Node*newNode=(Node*)calloc(1,sizeof(Node));
+    newNode->data=data;
+    newNode->next=NULL;
     if(list->head==NULL){
-        list->head=newnode;
+        list->head=newNode;
     }
     else{
         Node*current=list->head;
         while(current->next!=NULL){
             current=current->next;
         }
-        current->next=newnode;
+        current->next=newNode;
     }
 }
-int getSize(linkedlist*list){
-    int count=1;
-    Node*current=list->head;
-    while(current->next!=NULL){
-        count++;
-        current=current->next;
+void InsertAt(linkedlist*list,int index,int data){
+    if(getSize(list)>index&&index>=0){
+        Node*newNode=(Node*)calloc(1,sizeof(Node));
+        if(index==0){
+            newNode->data=data;
+            newNode->next=list->head;
+            list->head=newNode;
+            return;
+        }
+        newNode->data=data;
+        Node*current=list->head;
+        for(int indice=index-1;indice>0;indice--){
+            current=current->next;
+        }
+        newNode->next=current->next;
+        current->next=newNode;
+        return;
     }
-    return count;
-}
-Node*getHead(linkedlist*list){
-    return list->head;
-}
-Node*getTail(linkedlist*list){
-    Node*current=list->head;
-    while(current->next!=NULL){
-        current=current->next;
-    }
-    return current;
-}
-void printlist(linkedlist*list){
-    Node*current=list->head;
-    printf("The list is:\n");
-    while(current->next!=NULL){
-        printf("%d\n",current->data);
-        current=current->next;
-    }
-    printf("%d\n",current->data);
-    printf("\n");
+    printf("Invalid Index\n");
+    
+    
 }
 void deleteNode(linkedlist*list,int data){
     if(list->head==NULL){
@@ -92,56 +149,21 @@ void deleteNode(linkedlist*list,int data){
         }
         current=current->next;
     }
-}
-bool isEmpty(linkedlist*list){
-    if(list->head==NULL){
-        return true;
-    }
-    return false;
-}
-Node *getNode(linkedlist*list,int index){
-    Node*current=list->head;
-    int indice=0;
-    if(getSize(list)>=index+1){
-        while(current->next!=NULL&&indice<=index){
-            current=current->next;
-            indice++;
-        }
-        return current;
-    }
-    printf("Invaild Index");
-    return current;
-}
-int search(linkedlist*list,int data){
-    Node*current=list->head;
-    int index=0;
-    while(current!=NULL&&current->data!=data){
-        current=current->next;
-        index++;
-    }
-    if(current==NULL) return -1;
-    return index;
-}
-void InsertAt(linkedlist*list,int index,int data){
-    if(getSize(list)>=index+1&&index>=0){
-        Node*newNode=(Node*)calloc(1,sizeof(Node));
-        newNode->data=data;
-        Node*current=list->head;
-        for(int indice=index-1;indice>0;indice--){
-            current=current->next;
-        }
-        newNode->next=current->next;
-        current->next=newNode;
-        return;
-    }
-    printf("Invalid Index");
+    printf("Invaild Data\n");
 }
 void deleteNodeAt(linkedlist*list,int index){
-    if(list->head==NULL){
-        return;
-    }
-    Node*current=list->head;
-    if(getSize(list)>=index+1&&index>=0){
+    if(getSize(list)>index&&index>=0){
+        if(list->head==NULL){
+            printf("The list is empty\n");
+            return;
+        }
+        if (index==0){
+            Node*temp=list->head;
+            list->head=list->head->next;
+            free(temp);
+            return;
+        }
+        Node*current=list->head;
         for(int indice=index-1;indice>0;indice--){
             current=current->next;
         }
@@ -150,28 +172,29 @@ void deleteNodeAt(linkedlist*list,int index){
         free(temp);
         return;
     }
+    printf("Invaild Index\n");
 }
 int main(){
-    void *x=createlinkedlist();
-    printf("%d\n\n",isEmpty(x));
-    insertAtHead(x,2);
-    insertAtTail(x,5);
-    insertAtTail(x,7);
-    insertAtHead(x,4);
-    insertAtTail(x,9);
-    printlist(x);
-    InsertAt(x,3,6);
-    printlist(x);
-    deleteNode(x,8);
-    deleteNode(x,5);
-    printlist(x);
-    deleteNodeAt(x,4);
-    printlist(x);
-    Node*y=getHead(x);
-    printf("%d\n",y->data);
-    Node*z=getTail(x);
-    printf("%d\n",z->data);
-    printf("%d\n",getSize(x));
-    printf("%d\n",isEmpty(x));
-    printf("%d\n",search(x,7));
+    linkedlist *list=createlinkedlist();
+    printf("Is the list empty? %s\n", isEmpty(list) ? "Yes" : "No");
+    insertAtHead(list,2);
+    insertAtTail(list,5);
+    insertAtTail(list,7);
+    insertAtHead(list,4);
+    insertAtTail(list,9);
+    printlist(list);
+    InsertAt(list,3,6);
+    printlist(list);
+    deleteNode(list,8);
+    deleteNode(list,5);
+    printlist(list);
+    deleteNodeAt(list,4);
+    printlist(list);
+    printf("%d\n",getHead(list));
+    printf("%d\n",getTail(list));
+    printf("%d\n",getSize(list));
+    printf("Is the list empty? %s\n", isEmpty(list) ? "Yes" : "No");
+    printf("%d\n",search(list,7));
+    Node*x=getNode(list,1);
+    printf("%d\n",x->data);
 }
