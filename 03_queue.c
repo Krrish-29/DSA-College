@@ -433,9 +433,7 @@ int main() {
 /*#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
 #define MAX 3  // Order of the B+ Tree (Adjustable)
-
 // Structure for B+ Tree Node
 typedef struct BPlusTreeNode {
     int keys[MAX];  // Array of keys
@@ -444,9 +442,7 @@ typedef struct BPlusTreeNode {
     bool isLeaf;  // Flag to indicate leaf node
     int numKeys;  // Number of keys currently in node
 } BPlusTreeNode;
-
 BPlusTreeNode *root = NULL;  // Root of the B+ tree
-
 // Function to create a new node
 BPlusTreeNode *createNode(bool isLeaf) {
     BPlusTreeNode *newNode = (BPlusTreeNode *)malloc(sizeof(BPlusTreeNode));
@@ -456,7 +452,6 @@ BPlusTreeNode *createNode(bool isLeaf) {
     for (int i = 0; i <= MAX; i++) newNode->children[i] = NULL;
     return newNode;
 }
-
 // Function to find the leaf node where the key should be inserted
 BPlusTreeNode *findLeaf(BPlusTreeNode *node, int key) {
     if (node == NULL) return NULL;
@@ -466,7 +461,6 @@ BPlusTreeNode *findLeaf(BPlusTreeNode *node, int key) {
     while (i < node->numKeys && key > node->keys[i]) i++;
     return findLeaf(node->children[i], key);
 }
-
 // Function to insert a key into a non-full node
 void insertInLeaf(BPlusTreeNode *leaf, int key) {
     int i;
@@ -476,19 +470,16 @@ void insertInLeaf(BPlusTreeNode *leaf, int key) {
     leaf->keys[i + 1] = key;
     leaf->numKeys++;
 }
-
 // Function to split a leaf node
 void splitLeaf(BPlusTreeNode *leaf) {
     int mid = (MAX + 1) / 2;
     BPlusTreeNode *newLeaf = createNode(true);
-    
     // Move half the keys to the new leaf
     for (int i = mid, j = 0; i < MAX; i++, j++) {
         newLeaf->keys[j] = leaf->keys[i];
         newLeaf->numKeys++;
         leaf->numKeys--;
-    }
-    
+    }   
     // Link the new leaf
     newLeaf->next = leaf->next;
     leaf->next = newLeaf;
@@ -518,7 +509,6 @@ void splitLeaf(BPlusTreeNode *leaf) {
         if (parent->numKeys == MAX) splitLeaf(parent);
     }
 }
-
 // Function to insert a key
 void insert(int key) {
     if (root == NULL) {
@@ -527,65 +517,49 @@ void insert(int key) {
         root->numKeys = 1;
         return;
     }
-
     BPlusTreeNode *leaf = findLeaf(root, key);
     insertInLeaf(leaf, key);
-
     if (leaf->numKeys == MAX) splitLeaf(leaf);
 }
-
 // Function to find a key in the tree
 bool search(int key) {
     BPlusTreeNode *leaf = findLeaf(root, key);
     if (leaf == NULL) return false;
-
     for (int i = 0; i < leaf->numKeys; i++)
         if (leaf->keys[i] == key) return true;
-
     return false;
 }
-
 // Function to print the B+ Tree (Level-wise)
 void printTree(BPlusTreeNode *node, int level) {
     if (node == NULL) return;
-
     printf("Level %d : ", level);
     for (int i = 0; i < node->numKeys; i++)
         printf("%d ", node->keys[i]);
     printf("\n");
-
     if (!node->isLeaf)
         for (int i = 0; i <= node->numKeys; i++)
             printTree(node->children[i], level + 1);
 }
-
 // Function to delete a key (Simplified)
 void deleteKey(int key) {
     if (root == NULL) return;
-
     BPlusTreeNode *leaf = findLeaf(root, key);
     if (leaf == NULL) return;
-
     int i;
     for (i = 0; i < leaf->numKeys; i++) {
         if (leaf->keys[i] == key) break;
     }
-
     if (i == leaf->numKeys) return; // Key not found
-
     for (; i < leaf->numKeys - 1; i++) {
         leaf->keys[i] = leaf->keys[i + 1];
     }
-
     leaf->numKeys--;
-
     // If root becomes empty and it is not a leaf
     if (leaf == root && leaf->numKeys == 0) {
         free(root);
         root = NULL;
     }
 }
-
 // Main function to test the B+ Tree
 int main() {
     insert(10);
@@ -596,17 +570,13 @@ int main() {
     insert(30);
     insert(7);
     insert(17);
-
     printf("B+ Tree:\n");
     printTree(root, 0);
-
     printf("\nSearch 12: %s\n", search(12) ? "Found" : "Not Found");
     printf("Search 25: %s\n", search(25) ? "Found" : "Not Found");
-
     printf("\nDeleting 6...\n");
     deleteKey(6);
     printTree(root, 0);
-
     return 0;
 }
 */ 
@@ -623,9 +593,7 @@ typedef struct BTreeNode {
     int numKeys;  // Current number of keys
     bool isLeaf;  // True if node is a leaf
 } BTreeNode;
-
 BTreeNode *root = NULL;
-
 // Function to create a new node
 BTreeNode *createNode(bool isLeaf) {
     BTreeNode *node = (BTreeNode *)malloc(sizeof(BTreeNode));
@@ -636,7 +604,6 @@ BTreeNode *createNode(bool isLeaf) {
     }
     return node;
 }
-
 // Function to find the appropriate leaf node for insertion
 BTreeNode *findLeaf(BTreeNode *node, int key) {
     if (node == NULL || node->isLeaf) return node;
@@ -645,7 +612,6 @@ BTreeNode *findLeaf(BTreeNode *node, int key) {
     while (i < node->numKeys && key > node->keys[i]) i++;
     return findLeaf(node->children[i], key);
 }
-
 // Function to insert a key into a non-full leaf node
 void insertInLeaf(BTreeNode *leaf, int key) {
     int i;
@@ -655,7 +621,6 @@ void insertInLeaf(BTreeNode *leaf, int key) {
     leaf->keys[i + 1] = key;
     leaf->numKeys++;
 }
-
 // Function to redistribute keys with sibling before splitting
 void redistributeOrSplit(BTreeNode *parent, int pos) {
     BTreeNode *node = parent->children[pos];
@@ -669,24 +634,20 @@ void redistributeOrSplit(BTreeNode *parent, int pos) {
         
         sibling->keys[0] = parent->keys[pos];
         sibling->children[0] = node->children[node->numKeys];
-
         parent->keys[pos] = node->keys[node->numKeys - 1];
         sibling->numKeys++;
         node->numKeys--;
         return;
     }
-
     // If redistribution is not possible, split the node
     int mid = (MAX + 1) / 2;
     BTreeNode *newNode = createNode(node->isLeaf);
-    
     // Move half of the keys to the new node
     for (int i = mid, j = 0; i < MAX; i++, j++) {
         newNode->keys[j] = node->keys[i];
         newNode->numKeys++;
         node->numKeys--;
     }
-
     // Adjust children pointers if not a leaf
     if (!node->isLeaf) {
         for (int i = mid; i <= MAX; i++) {
@@ -694,17 +655,14 @@ void redistributeOrSplit(BTreeNode *parent, int pos) {
             node->children[i] = NULL;
         }
     }
-
     // Insert the new key into the parent
     for (int i = parent->numKeys; i > pos; i--) {
         parent->keys[i] = parent->keys[i - 1];
         parent->children[i + 1] = parent->children[i];
     }
-
     parent->keys[pos] = newNode->keys[0];
     parent->children[pos + 1] = newNode;
     parent->numKeys++;
-
     // If parent is full, recursively handle
     if (parent->numKeys == MAX) {
         if (parent == root) {
@@ -715,7 +673,6 @@ void redistributeOrSplit(BTreeNode *parent, int pos) {
         redistributeOrSplit(parent, 0);
     }
 }
-
 // Function to insert a key into the B* Tree
 void insert(int key) {
     if (root == NULL) {
@@ -724,10 +681,8 @@ void insert(int key) {
         root->numKeys = 1;
         return;
     }
-
     BTreeNode *leaf = findLeaf(root, key);
     insertInLeaf(leaf, key);
-
     // If the leaf becomes full, redistribute or split
     if (leaf->numKeys == MAX) {
         if (leaf == root) {
@@ -738,30 +693,22 @@ void insert(int key) {
         redistributeOrSplit(root, 0);
     }
 }
-
 // Function to search for a key in the B* Tree
 bool search(BTreeNode *node, int key) {
     if (node == NULL) return false;
-
     int i = 0;
     while (i < node->numKeys && key > node->keys[i]) i++;
-
     if (i < node->numKeys && key == node->keys[i]) return true;
-
     return search(node->children[i], key);
 }
-
 // Function to delete a key from the B* Tree (simplified)
 void deleteKey(BTreeNode *node, int key) {
     if (node == NULL) return;
-
     int i;
     for (i = 0; i < node->numKeys; i++) {
         if (node->keys[i] == key) break;
     }
-
     if (i == node->numKeys) return; // Key not found
-
     // If the node is a leaf, simply remove the key
     if (node->isLeaf) {
         for (; i < node->numKeys - 1; i++) {
@@ -772,21 +719,17 @@ void deleteKey(BTreeNode *node, int key) {
         // For non-leaf nodes, replace with predecessor or successor (not fully implemented)
     }
 }
-
 // Function to print the tree (level-wise)
 void printTree(BTreeNode *node, int level) {
     if (node == NULL) return;
-
     printf("Level %d : ", level);
     for (int i = 0; i < node->numKeys; i++)
         printf("%d ", node->keys[i]);
     printf("\n");
-
     if (!node->isLeaf)
         for (int i = 0; i <= node->numKeys; i++)
             printTree(node->children[i], level + 1);
 }
-
 // Main function to test the B* Tree
 int main() {
     insert(10);
@@ -797,17 +740,13 @@ int main() {
     insert(30);
     insert(7);
     insert(17);
-
     printf("B* Tree Structure:\n");
     printTree(root, 0);
-
     printf("\nSearch 12: %s\n", search(root, 12) ? "Found" : "Not Found");
     printf("Search 25: %s\n", search(root, 25) ? "Found" : "Not Found");
-
     printf("\nDeleting 6...\n");
     deleteKey(root, 6);
     printTree(root, 0);
-
     return 0;
 }
 */
