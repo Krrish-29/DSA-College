@@ -79,7 +79,7 @@ int main(){
         scanf("%d",&row[k]);
         if(k>0 &&(column[k-1]!=row[k])){
             printf("Matrices cannot be Multiplied");
-            exit(0);
+            exit(1);
         }
         printf("Enter the number of column for Matrix %d:",k+1);
         scanf("%d",&column[k]);
