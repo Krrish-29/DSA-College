@@ -43,18 +43,17 @@ int getTail(linkedlist*list){
     }
     return current->data;
 }
-Node *getNode(linkedlist*list,int index){
+int getNode(linkedlist*list,int index){
     Node*current=list->head;
-    int indice=0;
-    if(getSize(list)>=index+1&&index>=0){
-        while(current!=NULL&&indice<index){
+    if(getSize(list)>index&&index>=0){
+        while(current!=NULL&&index){
             current=current->next;
-            indice++;
+            index--;
         }
-        return current;
+        return current->data;
     }
-    printf("Invaild Index\nThe head of the list is:");
-    return current;
+    printf("Invaild Index ");
+    return -1;
 }
 void printlist(linkedlist*list){
     if(list->head==NULL){
@@ -107,7 +106,7 @@ void insertAtTail(linkedlist*list,int data){
         current->next=newNode;
     }
 }
-void InsertAt(linkedlist*list,int index,int data){
+void insertAt(linkedlist*list,int index,int data){
     if(getSize(list)>=index&&index>=0){
         Node*newNode=(Node*)calloc(1,sizeof(Node));
         if(index==0){
@@ -181,7 +180,7 @@ int main(){
     insertAtHead(list,4);
     insertAtTail(list,9);
     printlist(list);
-    InsertAt(list,5,6);
+    insertAt(list,5,6);
     printlist(list);
     deleteNode(list,8);
     deleteNode(list,6);
@@ -193,6 +192,5 @@ int main(){
     printf("%d\n",getSize(list));
     printf("Is the list empty? %s\n", isEmpty(list) ? "Yes" : "No");
     printf("%d\n",search(list,7));
-    Node*x=getNode(list,1);
-    printf("%d\n",x->data);
+    printf("%d\n",getNode(list,3));
 }

@@ -110,7 +110,7 @@ int search(linkedlist*list,int data){
     if(current->data==data) return index;
     return -1;
 }
-void InsertAt(linkedlist*list,int index,int data){
+void insertAt(linkedlist*list,int index,int data){
     if(getSize(list)>=index&&index>=0){
         Node*newNode=(Node*)calloc(1,sizeof(Node));
         if(index==0){
@@ -199,7 +199,7 @@ int main(){
     insertAtHead(list,4);
     insertAtTail(list,9);
     printlist(list);
-    InsertAt(list,0,6);
+    insertAt(list,0,6);
     printlist(list);
     deleteNode(list,8);
     deleteNode(list,6);
