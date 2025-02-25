@@ -108,7 +108,7 @@ void insertAtTail(linkedlist*list,int data){
     }
 }
 void InsertAt(linkedlist*list,int index,int data){
-    if(getSize(list)>index&&index>=0){
+    if(getSize(list)>=index&&index>=0){
         Node*newNode=(Node*)calloc(1,sizeof(Node));
         if(index==0){
             newNode->data=data;
@@ -125,9 +125,7 @@ void InsertAt(linkedlist*list,int index,int data){
         current->next=newNode;
         return;
     }
-    printf("Invalid Index\n");
-    
-    
+    printf("Invalid Index\n");    
 }
 void deleteNode(linkedlist*list,int data){
     if(list->head==NULL){
@@ -183,10 +181,10 @@ int main(){
     insertAtHead(list,4);
     insertAtTail(list,9);
     printlist(list);
-    InsertAt(list,3,6);
+    InsertAt(list,5,6);
     printlist(list);
     deleteNode(list,8);
-    deleteNode(list,5);
+    deleteNode(list,6);
     printlist(list);
     deleteNodeAt(list,4);
     printlist(list);
