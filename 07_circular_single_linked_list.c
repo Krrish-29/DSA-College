@@ -85,7 +85,7 @@ int getTail(linkedlist*list){
 bool isEmpty(linkedlist*list){
     return list->head==NULL;
 }
-Node *getNode(linkedlist*list,int index){
+int getNode(linkedlist*list,int index){
     Node*current=list->head;
     int indice=0;
     if(getSize(list)>=index+1&&index>=0){
@@ -93,10 +93,10 @@ Node *getNode(linkedlist*list,int index){
             current=current->next;
             indice++;
         }
-        return current;
+        return current->data;
     }
-    printf("Invaild Index\nThe head of the list is:");
-    return current;
+    printf("Invaild Index ");
+    return -1;
 }
 int search(linkedlist*list,int data){
     Node*current=list->head;
@@ -211,6 +211,5 @@ int main(){
     printf("%d\n",getSize(list));
     printf("%d\n",isEmpty(list));
     printf("%d\n",search(list,9));
-    Node*x=getNode(list,0);
-    printf("%d\n",x->data);
+    printf("%d\n",getNode(list,0));
 }
