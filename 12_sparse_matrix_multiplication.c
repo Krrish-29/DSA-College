@@ -31,33 +31,34 @@ void insertAtTail(linkedlist*list,int value,int row,int column){
         current->next=newNode;
     }
 }
-linkedlist* matrix_multiplication(linkedlist*list1,int row1,int column1,linkedlist*list2,int row2,int column2){
-    linkedlist*list=createsparselist();
-    sparse_matrix *ptr1,*ptr2;
+linkedlist* matrix_multiplication(linkedlist* list1, int row1, int column1, linkedlist* list2, int row2, int column2) {
+    linkedlist* list = createsparselist();
+    sparse_matrix *ptr1, *ptr2;
     int value;
-    for(int x=0;x<row1;x++){
-        for(int y=0;y<column2;y++){
-            ptr1=list1->head;
-            value=0;
-            while(ptr1!=NULL){
-                if(ptr1->row==x){
-                    ptr2=list2->head;
-                    while(ptr2!=NULL){
-                        if(ptr1->column==ptr2->row&&y==ptr2->column){
-                            value+=(ptr1->value)*(ptr2->value);
+    for (int x = 0; x < row1; x++) {
+        for (int y = 0; y < column2; y++) {
+            value = 0;
+            ptr1 = list1->head;
+            while (ptr1 != NULL) {
+                if (ptr1->row == x) {
+                    ptr2 = list2->head;
+                    while (ptr2 != NULL) {
+                        if (ptr1->column == ptr2->row && y == ptr2->column) {
+                            value += (ptr1->value) * (ptr2->value);
                         }
-                        ptr2=ptr2->next;
+                        ptr2 = ptr2->next;
                     }
-                    ptr1=ptr1->next;
                 }
-                if(value!=0){
-                    insertAtTail(list,value,x,y);
-                }
+                ptr1 = ptr1->next;
+            }
+            if (value != 0) {
+                insertAtTail(list, value, x, y);
             }
         }
     }
-    return list;   
+    return list;
 }
+
 void printlist(linkedlist*list){
     sparse_matrix*current=list->head;
     while(current!=NULL){
@@ -73,8 +74,8 @@ int main(){
     for(int x=0;x<matrix_number;x++){
         array[x]=createsparselist();
     }
-    int row[matrix_number],column[matrix_number],k=0;
-    for(k;k<matrix_number;k++){
+    int row[matrix_number],column[matrix_number];
+    for(int k=0;k<matrix_number;k++){
         printf("Enter the number of rows for Matrix %d:",k+1);
         scanf("%d",&row[k]);
         if(k>0 &&(column[k-1]!=row[k])){
@@ -95,7 +96,7 @@ int main(){
         }
         if(k>=1){
             printf("Matrix multiply");
-            array[k-1]=matrix_multiplication(array[k-1],row[k-1],column[k-1],array[k],row[k],column[k]);
+            array[k]=matrix_multiplication(array[k-1],row[k-1],column[k-1],array[k],row[k],column[k]);
             row[k]=row[k-1];
         }
     }
@@ -104,5 +105,5 @@ int main(){
     // }
     printf("\n");
     printf("The Sparse Matrix multiplication of given Matrices is:\n");
-    printlist(array[k]);
+    printlist(array[matrix_number-1]);
 }
