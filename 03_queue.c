@@ -1,14 +1,15 @@
-/**/
+/*
 // Static array implementation
-/*Enqueue: Adds an element to the end of the queue.
-Dequeue: Removes and returns the front element from the queue.
-Front/Peek: Returns the front element without removing it.
-IsEmpty: Checks if the queue is empty.
-Size: Returns the number of elements in the queue.*/
+// Enqueue: Adds an element to the end of the queue.
+// Dequeue: Removes and returns the front element from the queue.
+// Front/Peek: Returns the front element without removing it.
+// IsEmpty: Checks if the queue is empty.
+// Size: Returns the number of elements in the queue.
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
-#define MAX 5
+#define MAX 1000
 typedef struct queue{
     int front;
     int rear;
@@ -83,10 +84,11 @@ void print(Queue*queue){
     if(isEmpty(queue)){
         printf("The queue is empty.\n");
         return ;
-    }
+        }
     for(int i=0;i<getSize(queue);i++){
-        printf("%d ",queue->arr[i]);
+        printf("%d ",queue->arr[(queue->front+i)%MAX]);
     }
+    printf("\n");
 }
 int main(){
     Queue*queue=initialize_queue();
@@ -113,92 +115,126 @@ int main(){
     printf("%d\n",getSize(queue));
     printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
 }
-
+*/
 /*
 //Dynamic array implementation
-
 #include<stdio.h>
 #include<stdbool.h>
 #include<stdlib.h>
-typedef struct stack{
-    int top;// same as len in dynamic array 
+typedef struct queue{
+    int front;
+    int rear;
     int *arr;
     int capacity;
-}Stack;
-void initialize_stack(Stack*stack){
-    stack->top=-1;
-    stack->capacity=1;
-    stack->arr=(int*)calloc(1,sizeof(int));
+}Queue;
+Queue* initialize_queue(){
+    Queue*queue=(Queue*)calloc(1,sizeof(Queue));
+    queue->front=-1;
+    queue->rear=-1;
+    queue->arr=(int*)calloc(1,sizeof(int));
+    queue->capacity=1;
+    return queue;
 }
-void resize(Stack*stack){
-    if(((stack->capacity)/2>=stack->top)&&((stack->capacity)/2>0)){
-        stack->capacity/=2;
+bool isEmpty(Queue*queue){
+    return queue->rear==-1;  
+}
+bool isFull(Queue*queue){
+    return (queue->rear+1)%queue->capacity==queue->front;
+}
+int getSize(Queue*queue){
+    if(isEmpty(queue)){
+        return 0;
+    }
+    else if(queue->rear>=queue->front){
+        return queue->rear-queue->front+1;
     }
     else{
-        stack->capacity*=2;
+        return queue->capacity-(queue->front-queue->rear)-1;
     }
-    stack->arr=realloc(stack->arr,(stack->capacity)*sizeof(int));
 }
-void Push(Stack*stack,int data){
-    if(stack->capacity<=++(stack->top)){
-        resize(stack);
+void enqueue(Queue*queue,int data){
+    if(isFull(queue)){
+        queue->capacity*=2;
+        int * new_array=(int*)calloc(queue->capacity,sizeof(int));
+        int size=getSize(queue);
+        for(int i=0;i<size;i++){
+            new_array[i]=queue->arr[(queue->front+i)%queue->capacity];
+        }
+        free(queue->arr);
+        queue->arr=new_array;
+        queue->front=0;
+        queue->rear=size-1;
     }
-    stack->arr[stack->top]=data;
-    printf("%d is pushed into the stack\n",data);
-}
-bool isEmpty(Stack*stack){
-    return (stack->top==-1);
-}
-bool isFull(Stack*stack){
-    return (stack->top+1==stack->capacity);
-}
-int Pop(Stack*stack){
-    if(!isEmpty(stack)){
-        printf("%d is poped from the stack\n",stack->arr[stack->top]);
-        return stack->arr[stack->top--];
+    if(isEmpty(queue)){
+        queue->front=queue->rear=0;
     }
-    printf("UNDERFLOW\n");
-    return 0;
-}
-int Peek(Stack*stack){
-    if(!isEmpty(stack)){
-        return stack->arr[stack->top];
+    else{
+        queue->rear=(queue->rear+1)%queue->capacity;
     }
-    return 0;
+    printf("%d is enqueued into the queue\n",data);
+    queue->arr[queue->rear]=data;
 }
-int getSize(Stack*stack){
-    return (stack->top+1);
+int peek(Queue*queue){
+    if(isEmpty(queue)){
+        printf("UnderFlow ");
+        return -1;
+    }
+    return queue->arr[queue->front];
 }
-void clear(Stack*stack){
-    free(stack->arr);
-    initialize_stack(stack);
+int dequeue(Queue*queue){
+    if(isEmpty(queue)){
+        printf("UnderFlow\n");
+        return -1;
+    }
+    int return_value=queue->arr[queue->front];
+    if(queue->front==queue->rear){
+        queue->front=queue->rear=-1;
+    }
+    else{
+        queue->front=(queue->front+1)%queue->capacity;
+    }
+    printf("%d is dequeued from the queue\n",return_value);
+    return return_value;
+}
+Queue* clear(Queue*queue){
+    free(queue);
+    Queue* queue1=initialize_queue();
+    return queue1;
+} 
+void print(Queue*queue){
+    if(isEmpty(queue)){
+        printf("The queue is empty.\n");
+        return ;
+    }
+    for(int i=0;i<getSize(queue);i++){
+        printf("%d ",queue->arr[(queue->front+i)%queue->capacity]);
+    }
+    printf("\n");
 }
 int main(){
-    Stack stack;
-    initialize_stack(&stack);
-    Push(&stack,4);
-    Push(&stack,1);
-    Push(&stack,6);
-    Push(&stack,2);
-    Push(&stack,3);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    printf("%d\n",isEmpty(&stack));
-    printf("%d\n",isFull(&stack));
-    Push(&stack,4);
-    Push(&stack,1);
-    Push(&stack,6);
-    printf("%d\n",Peek(&stack));
-    printf("%d\n",getSize(&stack));
-    clear(&stack);
-    Push(&stack,2);
-    printf("%d\n",getSize(&stack));
+    Queue*queue=initialize_queue();
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    enqueue(queue,10);
+    enqueue(queue,7);
+    enqueue(queue,5);
+    enqueue(queue,1);
+    enqueue(queue,6);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    print(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    clear(queue);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
 }
 */
 /*
@@ -209,15 +245,15 @@ int main(){
 typedef struct Node{
     int data;
     struct Node* next;
-}Node;
-typedef struct queue{
-    Node* head;
-}Queue;
-Queue* initialize_queue(){
-    Queue *queue=(Queue*)calloc(1,sizeof(Queue));
-    queue->head=NULL;
-    return queue;
-}
+    }Node;
+    typedef struct queue{
+        Node* head;
+        }Queue;
+        Queue* initialize_queue(){
+            Queue *queue=(Queue*)calloc(1,sizeof(Queue));
+            queue->head=NULL;
+            return queue;
+            }
 void enqueue(Queue*queue,int data){
     Node*newNode=(Node*)calloc(1,sizeof(Node));
     newNode->data=data;
