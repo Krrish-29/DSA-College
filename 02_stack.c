@@ -1,4 +1,4 @@
-/* 
+/*
 //Static array implementation
 // Push: Adds an element to the top of the stack.
 // Pop: Removes and returns the top element from the stack.
@@ -7,14 +7,23 @@
 // Size:Returns the number of elements in the stack.
 
 #include<stdio.h>
+#include<stdlib.h>
 #include<stdbool.h>
 #define Max 1000
 typedef struct Stack{
     int top;
     int arr[Max];
 }Stack;
-void initialize_stack(Stack*stack){
+Stack* initialize_stack(){
+    Stack*stack=(Stack*)calloc(1,sizeof(Stack));
     stack->top=-1;  
+    return stack;
+}
+void print(Stack*stack){
+    for(int i=0;i<=stack->top;i++){
+        printf("%d ",stack->arr[i]);
+    }
+    printf("\n");
 }
 bool isFull(Stack*stack){
     return (stack->top==Max-1);
@@ -22,7 +31,10 @@ bool isFull(Stack*stack){
 bool isEmpty(Stack*stack){
     return (stack->top==-1);
 }
-void Push(Stack*stack,int data){
+int getSize(Stack*stack){
+    return (stack->top)+1;
+}
+void push(Stack*stack,int data){
     if(!isFull(stack)){
         printf("%d is pushed into the stack\n",data);
         stack->arr[++stack->top]=data;
@@ -30,7 +42,7 @@ void Push(Stack*stack,int data){
     }
     printf("OVERFLOW\n");
 }
-int Pop(Stack*stack){
+int pop(Stack*stack){
     if(!isEmpty(stack)){
         printf("%d is poped from the stack\n",stack->arr[stack->top]);
         return stack->arr[stack->top--];
@@ -38,39 +50,46 @@ int Pop(Stack*stack){
     printf("UNDERFLOW\n");
     return 0;
 }
-int Peek(Stack*stack){
+int peek(Stack*stack){
     if(!isEmpty(stack)){
         return stack->arr[stack->top];
     }
     return 0;
 }
-int getSize(Stack*stack){
-    return stack->top;
+Stack*clear(Stack*stack){
+    free(stack);
+    Stack*stack1=initialize_stack();
+    return stack1;
 }
 int main(){
-    Stack stack;
-    initialize_stack(&stack);
-    Push(&stack,4);
-    Push(&stack,1);
-    Push(&stack,6);
-    Push(&stack,2);
-    Push(&stack,3);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    printf("%d\n",isEmpty(&stack));
-    printf("%d\n",isFull(&stack));
-    printf("%d\n",Peek(&stack));
-    Push(&stack,4);
-    Push(&stack,1);
-    Push(&stack,6);
-    Push(&stack,2);
-
+    Stack *stack=initialize_stack();
+    push(stack,4);
+    push(stack,1);
+    push(stack,6);
+    push(stack,2);
+    push(stack,3);
+    print(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    printf("Is the Stack empty ? %s\n",isEmpty(stack)?"Yes":"No");
+    printf("Is the Stack full ? %s\n",isFull(stack)?"Yes":"No");
+    printf("%d\n",peek(stack));
+    push(stack,4);
+    push(stack,1);
+    push(stack,6);
+    push(stack,2);
+    print(stack);
+    printf("%d\n",peek(stack));
+    printf("%d\n",getSize(stack));
+    stack=clear(stack);
+    push(stack,2);
+    printf("%d\n",getSize(stack));
 }
 */
 /*
@@ -93,26 +112,18 @@ typedef struct stack{
     int *arr;
     int capacity;
 }Stack;
-void initialize_stack(Stack*stack){
+Stack* initialize_stack(){
+    Stack*stack=(Stack*)calloc(1,sizeof(Stack));
     stack->top=-1;
     stack->capacity=1;
     stack->arr=(int*)calloc(1,sizeof(int));
+    return stack;
 }
-void resize(Stack*stack){
-    if(((stack->capacity)/2>=stack->top)&&((stack->capacity)/2>0)){
-        stack->capacity/=2;
+void print(Stack*stack){
+    for(int i=0;i<=stack->top;i++){
+        printf("%d ",stack->arr[i]);
     }
-    else{
-        stack->capacity*=2;
-    }
-    stack->arr=realloc(stack->arr,(stack->capacity)*sizeof(int));
-}
-void Push(Stack*stack,int data){
-    if(stack->capacity<=++(stack->top)){
-        resize(stack);
-    }
-    stack->arr[stack->top]=data;
-    printf("%d is pushed into the stack\n",data);
+    printf("\n");
 }
 bool isEmpty(Stack*stack){
     return (stack->top==-1);
@@ -120,7 +131,23 @@ bool isEmpty(Stack*stack){
 bool isFull(Stack*stack){
     return (stack->top+1==stack->capacity);
 }
-int Pop(Stack*stack){
+int getSize(Stack*stack){
+    return (stack->top)+1;
+}
+void push(Stack*stack,int data){
+    if(stack->capacity<=++(stack->top)){
+        if(((stack->capacity)/2>=stack->top)&&((stack->capacity)/2>0)){
+            stack->capacity/=2;
+        }
+        else{
+            stack->capacity*=2;
+        }
+        stack->arr=realloc(stack->arr,(stack->capacity)*sizeof(int));
+    }
+    stack->arr[stack->top]=data;
+    printf("%d is pushed into the stack\n",data);
+}
+int pop(Stack*stack){
     if(!isEmpty(stack)){
         printf("%d is poped from the stack\n",stack->arr[stack->top]);
         return stack->arr[stack->top--];
@@ -128,45 +155,47 @@ int Pop(Stack*stack){
     printf("UNDERFLOW\n");
     return 0;
 }
-int Peek(Stack*stack){
+int peek(Stack*stack){
     if(!isEmpty(stack)){
         return stack->arr[stack->top];
     }
-    return 0;
+    printf("UnderFlow ");
+    return -1;
 }
-int getSize(Stack*stack){
-    return (stack->top+1);
-}
-void clear(Stack*stack){
+Stack* clear(Stack*stack){
     free(stack->arr);
-    initialize_stack(stack);
+    Stack*stack1 =initialize_stack();
+    return stack1;
 }
 int main(){
-    Stack stack;
-    initialize_stack(&stack);
-    Push(&stack,4);
-    Push(&stack,1);
-    Push(&stack,6);
-    Push(&stack,2);
-    Push(&stack,3);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    Pop(&stack);
-    printf("%d\n",isEmpty(&stack));
-    printf("%d\n",isFull(&stack));
-    Push(&stack,4);
-    Push(&stack,1);
-    Push(&stack,6);
-    printf("%d\n",Peek(&stack));
-    printf("%d\n",getSize(&stack));
-    clear(&stack);
-    Push(&stack,2);
-    printf("%d\n",getSize(&stack));
+    Stack *stack=initialize_stack();
+    push(stack,4);
+    push(stack,1);
+    push(stack,6);
+    push(stack,2);
+    push(stack,3);
+    print(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    printf("Is the Stack empty ? %s\n",isEmpty(stack)?"Yes":"No");
+    printf("Is the Stack full ? %s\n",isFull(stack)?"Yes":"No");
+    printf("%d\n",peek(stack));
+    push(stack,4);
+    push(stack,1);
+    push(stack,6);
+    push(stack,2);
+    print(stack);
+    printf("%d\n",peek(stack));
+    printf("%d\n",getSize(stack));
+    stack=clear(stack);
+    push(stack,2);
+    printf("%d\n",getSize(stack));
 }
 */
 /*
