@@ -1,143 +1,430 @@
- /*Enqueue: Adds an element to the end of the queue.
+/**/
+// Static array implementation
+/*Enqueue: Adds an element to the end of the queue.
 Dequeue: Removes and returns the front element from the queue.
 Front/Peek: Returns the front element without removing it.
 IsEmpty: Checks if the queue is empty.
 Size: Returns the number of elements in the queue.*/
-#include <stdio.h>
-#include <stdlib.h>
-// Node structure
-typedef struct Node {
-    int data;
-    struct Node* next;
-    struct Node* prev;
-} Node;
-// Head pointer
-Node* head = NULL;
-// Function to create a new node
-Node* createNode(int data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->data = data;
-    newNode->next = NULL;
-    newNode->prev = NULL;
-    return newNode;
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#define MAX 5
+typedef struct queue{
+    int front;
+    int rear;
+    int *arr;
+}Queue;
+Queue* initialize_queue(){
+    Queue*queue=(Queue*)calloc(1,sizeof(Queue));
+    queue->front=-1;
+    queue->rear=-1;
+    queue->arr=(int*)calloc(MAX,sizeof(int));
+    return queue;
 }
-// Function to insert a node at the head
-void insertAtHead(int data) {
-    Node* newNode = createNode(data);
-    if (!head) {
-        head = newNode;
-        head->next = head;
-        head->prev = head;
-    } else {
-        Node* tail = head->prev;
-        newNode->next = head;
-        newNode->prev = tail;
-        head->prev = newNode;
-        tail->next = newNode;
-        head = newNode;
-    }
+bool isEmpty(Queue*queue){
+    return queue->rear==-1;  
 }
-// Function to insert a node at the end
-void insertAtEnd(int data) {
-    Node* newNode = createNode(data);
-    if (!head) {
-        head = newNode;
-        head->next = head;
-        head->prev = head;
-    } else {
-        Node* tail = head->prev;
-        newNode->next = head;
-        newNode->prev = tail;
-        tail->next = newNode;
-        head->prev = newNode;
-    }
+bool isFull(Queue*queue){
+    return (queue->rear+1)%MAX==queue->front;
 }
-// Function to insert a node at a specific index
-void insertAtIndex(int data, int index) {
-    if (index == 0) {
-        insertAtHead(data);
-        return;
+void enqueue(Queue*queue,int data){
+    if(isFull(queue)){
+        printf("OverFlow\n");
+        return ;
     }
-    Node* newNode = createNode(data);
-    Node* temp = head;
-    for (int i = 0; i < index - 1 && temp->next != head; ++i) {
-        temp = temp->next;
+    if(isEmpty(queue)){
+        queue->front=queue->rear=0;
     }
-    if (temp->next == head) {
-        insertAtEnd(data);
-    } else {
-        newNode->next = temp->next;
-        newNode->prev = temp;
-        temp->next->prev = newNode;
-        temp->next = newNode;
+    else{
+        queue->rear=(queue->rear+1)%MAX;
     }
+    printf("%d is enqueued into the queue\n",data);
+    queue->arr[queue->rear]=data;
 }
-// Function to delete a node from the head
-void deleteAtHead() {
-    if (!head) return;
-    Node* temp = head;
-    if (head->next == head) {
-        head = NULL;
-    } else {
-        Node* tail = head->prev;
-        head = head->next;
-        head->prev = tail;
-        tail->next = head;
+int peek(Queue*queue){
+    if(isEmpty(queue)){
+        printf("UnderFlow ");
+        return -1;
     }
-    free(temp);
+    return queue->arr[queue->front];
 }
-// Function to delete a node from the end
-void deleteAtEnd() {
-    if (!head) return;
-    Node* tail = head->prev;
-    if (head->next == head) {
-        head = NULL;
-    } else {
-        tail->prev->next = head;
-        head->prev = tail->prev;
+int dequeue(Queue*queue){
+    if(isEmpty(queue)){
+        printf("UnderFlow\n");
+        return -1;
     }
-    free(tail);
+    int return_value=queue->arr[queue->front];
+    if(queue->front==queue->rear){
+        queue->front=queue->rear=-1;
+    }
+    else{
+        queue->front=(queue->front+1)%MAX;
+    }
+    printf("%d is dequeued from the queue\n",return_value);
+    return return_value;
 }
-// Function to delete a node at a specific index
-void deleteAtIndex(int index) {
-    if (index == 0) {
-        deleteAtHead();
-        return;
+int getSize(Queue*queue){
+    if(isEmpty(queue)){
+        return 0;
     }
-    Node* temp = head;
-    for (int i = 0; i < index && temp->next != head; ++i) {
-        temp = temp->next;
+    else if(queue->rear>=queue->front){
+        return queue->rear-queue->front+1;
     }
-    if (temp->next == head) {
-        deleteAtEnd();
-    } else {
-        temp->prev->next = temp->next;
-        temp->next->prev = temp->prev;
-        free(temp);
+    else{
+        return MAX-(queue->front-queue->rear)-1;
     }
 }
-// Function to traverse the list
-void traverse() {
-    if (!head) return;
-    Node* temp = head;
-    do {
-        printf("%d ", temp->data);
-        temp = temp->next;
-    } while (temp != head);
-    printf("\n");
+Queue* clear(Queue*queue){
+    free(queue);
+    Queue* queue1=initialize_queue();
+    return queue1;
+} 
+void print(Queue*queue){
+    if(isEmpty(queue)){
+        printf("The queue is empty.\n");
+        return ;
+    }
+    for(int i=0;i<getSize(queue);i++){
+        printf("%d ",queue->arr[i]);
+    }
 }
-// Main function to test the circular doubly linked list
-int main() {
-    insertAtHead(10);
-    insertAtHead(5);
-    insertAtEnd(20);
-    insertAtIndex(15, 2);
-    traverse();  // Expected output: 5 10 15 20
-    deleteAtHead();
-    traverse();  // Expected output: 10 15 20
-    deleteAtEnd();
-    traverse();  // Expected output: 10 15
-    deleteAtIndex(1);
-    traverse();  // Expected output: 10
+int main(){
+    Queue*queue=initialize_queue();
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    enqueue(queue,10);
+    enqueue(queue,7);
+    enqueue(queue,5);
+    enqueue(queue,1);
+    enqueue(queue,6);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    print(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    clear(queue);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+}
+
+/*
+//Dynamic array implementation
+
+#include<stdio.h>
+#include<stdbool.h>
+#include<stdlib.h>
+typedef struct stack{
+    int top;// same as len in dynamic array 
+    int *arr;
+    int capacity;
+}Stack;
+void initialize_stack(Stack*stack){
+    stack->top=-1;
+    stack->capacity=1;
+    stack->arr=(int*)calloc(1,sizeof(int));
+}
+void resize(Stack*stack){
+    if(((stack->capacity)/2>=stack->top)&&((stack->capacity)/2>0)){
+        stack->capacity/=2;
+    }
+    else{
+        stack->capacity*=2;
+    }
+    stack->arr=realloc(stack->arr,(stack->capacity)*sizeof(int));
+}
+void Push(Stack*stack,int data){
+    if(stack->capacity<=++(stack->top)){
+        resize(stack);
+    }
+    stack->arr[stack->top]=data;
+    printf("%d is pushed into the stack\n",data);
+}
+bool isEmpty(Stack*stack){
+    return (stack->top==-1);
+}
+bool isFull(Stack*stack){
+    return (stack->top+1==stack->capacity);
+}
+int Pop(Stack*stack){
+    if(!isEmpty(stack)){
+        printf("%d is poped from the stack\n",stack->arr[stack->top]);
+        return stack->arr[stack->top--];
+    }
+    printf("UNDERFLOW\n");
     return 0;
 }
+int Peek(Stack*stack){
+    if(!isEmpty(stack)){
+        return stack->arr[stack->top];
+    }
+    return 0;
+}
+int getSize(Stack*stack){
+    return (stack->top+1);
+}
+void clear(Stack*stack){
+    free(stack->arr);
+    initialize_stack(stack);
+}
+int main(){
+    Stack stack;
+    initialize_stack(&stack);
+    Push(&stack,4);
+    Push(&stack,1);
+    Push(&stack,6);
+    Push(&stack,2);
+    Push(&stack,3);
+    Pop(&stack);
+    Pop(&stack);
+    Pop(&stack);
+    Pop(&stack);
+    Pop(&stack);
+    Pop(&stack);
+    Pop(&stack);
+    Pop(&stack);
+    printf("%d\n",isEmpty(&stack));
+    printf("%d\n",isFull(&stack));
+    Push(&stack,4);
+    Push(&stack,1);
+    Push(&stack,6);
+    printf("%d\n",Peek(&stack));
+    printf("%d\n",getSize(&stack));
+    clear(&stack);
+    Push(&stack,2);
+    printf("%d\n",getSize(&stack));
+}
+*/
+/*
+// Single Linked list Implementaion
+#include<stdio.h>
+#include<stdbool.h>
+#include<stdlib.h>
+typedef struct Node{
+    int data;
+    struct Node* next;
+}Node;
+typedef struct queue{
+    Node* head;
+}Queue;
+Queue* initialize_queue(){
+    Queue *queue=(Queue*)calloc(1,sizeof(Queue));
+    queue->head=NULL;
+    return queue;
+}
+void enqueue(Queue*queue,int data){
+    Node*newNode=(Node*)calloc(1,sizeof(Node));
+    newNode->data=data;
+    newNode->next=NULL;
+    if(queue->head==NULL){
+        queue->head=newNode;
+    }
+    else{
+        Node*current=queue->head;
+        while(current->next!=NULL){
+            current=current->next;
+        }
+        current->next=newNode;
+    }
+    printf("%d is enqueued into the queue\n",data);
+}
+void print(Queue*queue){
+    Node*current=queue->head;
+    while(current!=NULL){
+        printf("%d ",current->data);
+        current=current->next;
+    }
+    printf("\n");
+}
+int dequeue(Queue*queue){
+    if(queue->head==NULL){
+        printf("UnderFlow\n");
+        return -1;
+    }
+    Node*temp=queue->head;
+    int return_value=temp->data;
+    queue->head=queue->head->next;
+    free(temp);
+    printf("%d is dequeued from the queue\n",return_value);
+    return return_value;
+}
+int peek(Queue*queue){
+    if(queue->head==NULL){
+        printf("UnderFlow ");
+        return -1;
+    }
+    return queue->head->data;
+}
+bool isEmpty(Queue*queue){
+    return queue->head==NULL;
+}
+int getSize(Queue*queue){
+    Node*current=queue->head;
+    int count=0;
+    if(queue->head==NULL) return count;
+    while(current!=NULL){
+        count++;
+        current=current->next;
+    }
+    return count;
+} 
+void clear(Queue*queue){
+    Node*current=queue->head;
+    while(current!=NULL){
+        Node*temp=current;
+        current=current->next;
+        free(temp);
+    }
+    queue->head=NULL;
+}
+int main(){
+    Queue*queue=initialize_queue();
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    enqueue(queue,10);
+    enqueue(queue,7);
+    enqueue(queue,5);
+    enqueue(queue,1);
+    enqueue(queue,6);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    print(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    clear(queue);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+}
+*/
+/*
+//Double linkedlist implementation
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+typedef struct Node{
+    int data;
+    struct Node*next;
+    struct Node*prev;
+}Node;
+typedef struct queue{
+    Node* head;
+    Node* tail;
+}Queue;
+Queue* initialize_queue(){
+    Queue*queue=(Queue*)calloc(1,sizeof(Queue));
+    queue->head=NULL;
+    queue->tail=NULL;
+    return queue;
+}
+void enqueue(Queue*queue,int data){
+    Node*newNode=(Node*)calloc(1,sizeof(Node));
+    newNode->data=data;
+    newNode->next=NULL;
+    newNode->prev=queue->tail;
+    if(queue->head==NULL){
+        queue->head=newNode;
+    }
+    else{
+        queue->tail->next=newNode;
+    }
+    queue->tail=newNode;
+    printf("%d is enqueued into the queue\n",data);
+}
+void print(Queue*queue){
+    Node*current=queue->head;
+    while(current!=NULL){
+        printf("%d ",current->data);
+        current=current->next;
+    }
+    printf("\n");
+}
+int dequeue(Queue*queue){
+    if(queue->head==NULL){
+        printf("UnderFlow\n");
+        return -1;
+    }
+    else{
+        int return_value=queue->head->data;
+        Node *temp=queue->head;
+        queue->head=queue->head->next;
+        if(queue->head!=NULL){
+            queue->head->prev=NULL;
+        }
+        else{
+            queue->tail=NULL;
+        }
+        printf("%d is dequeued from the queue\n",return_value);
+        free(temp);
+        return return_value;
+    }
+}
+int peek(Queue*queue){
+    if(queue->head==NULL){
+        printf("UnderFlow ");
+        return -1;
+    }
+    return queue->head->data;
+}
+int getSize(Queue*queue){
+    int count=0;
+    if (queue->head==NULL) return count;
+    Node*current=queue->head;
+    while(current!=NULL){
+        count++;
+        current=current->next;
+    }
+    return count;
+}
+void clear(Queue*queue){
+    Node*current=queue->head;
+    while(current!=NULL){
+        Node*temp=current;
+        current=current->next;  
+        free(temp);
+    }
+    queue->head=NULL;
+    queue->tail=NULL;
+}
+bool isEmpty(Queue*queue){
+    return queue->head==NULL;
+}
+int main(){
+    Queue*queue=initialize_queue();
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    enqueue(queue,10);
+    enqueue(queue,7);
+    enqueue(queue,5);
+    enqueue(queue,1);
+    enqueue(queue,6);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    print(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    dequeue(queue);
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+    clear(queue);
+    dequeue(queue);
+    printf("%d\n",peek(queue));
+    printf("%d\n",getSize(queue));
+    printf("Is the Queue empty ? %s\n",isEmpty(queue)?"Yes":"No");
+}
+*/

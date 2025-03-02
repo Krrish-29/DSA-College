@@ -12,11 +12,12 @@
 #define Max 1000
 typedef struct Stack{
     int top;
-    int arr[Max];
+    int *arr;
 }Stack;
 Stack* initialize_stack(){
     Stack*stack=(Stack*)calloc(1,sizeof(Stack));
     stack->top=-1;  
+    stack->arr=(int*)calloc(MAX,sizeof(int));
     return stack;
 }
 void print(Stack*stack){
