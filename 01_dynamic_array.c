@@ -3,6 +3,16 @@
 #include<stdbool.h>// condition - elements should be greater than zero.
 int *dynamicarray;
 int len=0,capacity=1;
+void add(int );
+int remove_element (int );
+int remove_at (int );
+void clear();
+void set(int ,int );
+bool isEmpty();
+bool contains (int );
+int get(int );
+int size();
+void printfarray();
 void add(int element){
     if(len>=capacity){
         capacity*=2;

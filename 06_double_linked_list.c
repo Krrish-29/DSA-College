@@ -10,6 +10,19 @@ typedef struct linkedlist{
     Node *head;
     Node *tail;
 } linkedlist;
+linkedlist *createlinkedlist();
+int getSize(linkedlist *);
+int getHead(linkedlist *);
+int getTail(linkedlist *);
+int getNode(linkedlist*,int );
+void printlist(linkedlist *);
+bool isEmpty(linkedlist*);
+int search(linkedlist*,int );
+void insertAtHead(linkedlist *, int );
+void insertAtTail(linkedlist *, int );
+void insertAt(linkedlist*,int ,int );
+void deleteNode(linkedlist *, int );
+void deleteNodeAt(linkedlist*,int );
 linkedlist *createlinkedlist(){
     linkedlist *list = (linkedlist *)calloc(1,sizeof(linkedlist));
     list->head = NULL;
