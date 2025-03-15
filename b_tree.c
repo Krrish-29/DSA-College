@@ -1,7 +1,7 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-// Define the order of the B-Tree
+//order of the B-Tree
 #define ORDER 3
 // Structure for the node present in a B-Tree
 typedef struct BTreeNode {
@@ -286,4 +286,4 @@ int main() {
     traverse(root);
     printf("\n");
     return 0;
-}*/
+}

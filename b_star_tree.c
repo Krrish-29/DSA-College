@@ -1,5 +1,5 @@
 
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -168,4 +168,3 @@ int main() {
     printTree(root, 0);
     return 0;
 }
-*/

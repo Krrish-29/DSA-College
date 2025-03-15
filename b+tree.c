@@ -1,4 +1,4 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #define MAX 3  // Order of the B+ Tree (Adjustable)
@@ -147,4 +147,3 @@ int main() {
     printTree(root, 0);
     return 0;
 }
-*/ 
