@@ -100,9 +100,9 @@ int main(){
             row[k]=row[k-1];
         }
     }
-    // for(int y=0;y<matrix_number;y++){
-    //     printlist(array[y]);
-    // }
+    for(int y=0;y<matrix_number;y++){
+        printlist(array[y]);
+    }
     printf("\n");
     printf("The Sparse Matrix multiplication of given Matrices is:\n");
     printlist(array[matrix_number-1]);
