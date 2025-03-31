@@ -1,5 +1,5 @@
-/*
-Single Linked list Implementaion
+
+// Single Linked list Implementaion
 
 #include<stdio.h>
 #include<stdbool.h>
@@ -19,8 +19,7 @@ void push(Stack*stack,int data){
     newNode->data=data;
     newNode->next=stack->head;
     stack->head=newNode;
-    printf("%d is pushed into the stack\n",data);
-}
+    printf("%d is pushed into the stack\n",data);}
 int pop(Stack*stack){
     if(stack->head==NULL){
         printf("UnderFlow\n");
@@ -31,23 +30,15 @@ int pop(Stack*stack){
     stack->head=stack->head->next;
     free(temp);
     printf("%d is poped from the stack\n",return_value);
-    return return_value;
-}
+    return return_value;}
 int peek(Stack*stack){
     if(stack->head==NULL){
         printf("UnderFlow\n");
         return 0;
     }
-    return stack->head->data;
-}
+    return stack->head->data;}
 bool isEmpty(Stack*stack){
-    if(stack->head!=NULL){
-        return false;
-    }
-    else{
-        return true;
-    }
-}
+    return stack->head!=NULL; }
 int getSize(Stack*stack){
     Node*current=stack->head;
     int count=0;
@@ -55,8 +46,7 @@ int getSize(Stack*stack){
         current=current->next;
         count++;
     }
-    return count;
-} 
+    return count;} 
 void clear(Stack*stack){
     Node*current=stack->head;
     while(current!=NULL){
@@ -64,30 +54,19 @@ void clear(Stack*stack){
         current=current->next;
         free(temp);
     }
-    stack->head=NULL;
-}
+    stack->head=NULL;}
 int main(){
     Stack stack;
     initialize_stack(&stack);
-    printf("%d\n",isEmpty(&stack));
-    push(&stack,10);
-    push(&stack,7);
-    push(&stack,5);
-    push(&stack,1);
+    push(&stack,4);
+    push(&stack,3);
+    pop(&stack);
+    pop(&stack);
+    pop(&stack);
+    printf("Is the Stack is Empty?%s\n",isEmpty(&stack)?"Yes":"No");
     push(&stack,6);
-    printf("%d\n",peek(&stack));
-    push(&stack,9);
-    pop(&stack);
-    printf("%d\n",peek(&stack));
-    pop(&stack);
-    pop(&stack);
-    printf("%d\n",peek(&stack));
-    printf("%d\n",getSize(&stack));
-    printf("%d\n",isEmpty(&stack));
+    printf("The top element of the Stack is:%d\n",peek(&stack));
+    printf("The size of the Stack is %d\n",getSize(&stack));
     clear(&stack);
-    pop(&stack);
-    printf("%d\n",peek(&stack));
-    printf("%d\n",getSize(&stack));
-    printf("%d\n",isEmpty(&stack));
+    printf("Is the Stack is Empty?%s\n",isEmpty(&stack)?"Yes":"No");
 }
-*/

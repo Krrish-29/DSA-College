@@ -231,6 +231,6 @@ int main(){
     char expression[buffer];
     printf("Please enter the expression needed to be evaluated:\n");
     fgets(expression,buffer,stdin);
-    printf("The result of expression is :%d",evalutaion(expression));
+    printf("The result of expression is:%d",evalutaion(expression));
     return 0;
 }
