@@ -29,9 +29,13 @@ void print(int array[],int n){
     for(int i=0;i<n;i++){
         printf("%d ",array[i]);
     }
+    printf("\n");
 }
 int main(){
     int array[]={9,5,4,7,8,6,1,2,3};
+    printf("Unsorted Array:");
+    print(array,sizeof(array)/sizeof(array[0]));
+    printf("Sorted Array:");
     heapsort(array,sizeof(array)/sizeof(array[0]));
     print(array,sizeof(array)/sizeof(array[0]));
 }
