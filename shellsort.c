@@ -16,10 +16,14 @@ void shell_sort(int array[],int size){
         gap/=3;
     }
 }
-int main(){
-    int array[]={10,8,9,4,5,6,7,3,2,1};
-    shell_sort(array,sizeof(array)/sizeof(array[0]));
-    for(int i=0;i<sizeof(array)/sizeof(array[0]);i++){
+void print(int array[],int size){
+    for (int i=0; i<size ;i++){
         printf("%d ",array[i]);
-    }
+    }printf("\n");
+}
+int main(){
+    int array[]={10,8,9,4,5,6,7,3,2,1},size=sizeof(array)/sizeof(array[0]);
+    printf("Unsorted Array : ");print(array,size);
+    shell_sort(array,size);
+    printf("Sorted Array : ");print(array,size);
 }

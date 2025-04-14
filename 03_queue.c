@@ -245,15 +245,15 @@ int main(){
 typedef struct Node{
     int data;
     struct Node* next;
-    }Node;
-    typedef struct queue{
-        Node* head;
-        }Queue;
-        Queue* initialize_queue(){
-            Queue *queue=(Queue*)calloc(1,sizeof(Queue));
-            queue->head=NULL;
-            return queue;
-            }
+}Node;
+typedef struct queue{
+    Node* head;
+}Queue;
+Queue* initialize_queue(){
+    Queue *queue=(Queue*)calloc(1,sizeof(Queue));
+    queue->head=NULL;
+    return queue;
+}
 void enqueue(Queue*queue,int data){
     Node*newNode=(Node*)calloc(1,sizeof(Node));
     newNode->data=data;
