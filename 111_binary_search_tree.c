@@ -1,75 +1,68 @@
-#include <stdio.h>
-#include <stdlib.h>
-struct Node {
-    int key;
-    struct Node* left;
-    struct Node* right;};
-struct Node* newNode(int key) {
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->key = key;node->left = NULL;
-    node->right = NULL;return node;}
-struct Node* insert(struct Node* root, int key) {
-    if (root == NULL) return newNode(key);
-    if (key < root->key) root->left = insert(root->left, key);
-    else if (key > root->key) root->right = insert(root->right, key);
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct TreeNode{
+    int data;struct TreeNode * left;
+    struct TreeNode * right;}TreeNode;
+typedef struct Tree{TreeNode * root;}Tree;
+Tree *initilaize_tree(){
+    Tree * tree =(Tree*)malloc(sizeof(Tree));
+    tree->root=NULL;return tree;}
+void inorder(TreeNode*root){
+    if(root==NULL) return ;inorder(root->left);
+    printf("%d ",root->data);inorder(root->right);}
+void preorder(TreeNode*root){
+    if(root==NULL) return ;printf("%d ",root->data);
+    preorder(root->left);preorder(root->right);}
+void postorder(TreeNode*root){
+    if(root==NULL) return ;postorder(root->left);
+    postorder(root->right);printf("%d ",root->data);}
+TreeNode* insertNode(TreeNode*root,int data){
+    if(root==NULL){
+        TreeNode*leafNode=(TreeNode*)malloc(sizeof(TreeNode));
+        leafNode->data=data;leafNode->left=NULL;
+        leafNode->right=NULL;return leafNode;}
+    if(root->data>data){root->left=insertNode(root->left,data);}
+    else if(root->data<data){root->right=insertNode(root->right,data);    }
     return root;}
-struct Node* findMin(struct Node* root) {
-    struct Node* current = root;
-    while (current && current->left != NULL) current = current->left;
-    return current;}
-struct Node* delete(struct Node* root, int key) {
-    if (root == NULL) return root;
-    if (key < root->key) root->left = delete(root->left, key); 
-    else if (key > root->key) root->right = delete(root->right, key);
-    else {
-        if (root->left == NULL) {
-            struct Node* temp = root->right;
-            free(root);
-            return temp;} 
-        else if (root->right == NULL) {
-            struct Node* temp = root->left;
-            free(root);
-            return temp;}
-        struct Node* temp = findMin(root->right);
-        root->key = temp->key;
-        root->right = delete(root->right, temp->key);
+TreeNode*findNode(TreeNode*root,int data){
+    if(root==NULL) {printf("The Tree is empty\n");return NULL;}
+    if(root->data==data) {return root;}
+    else if(root->data>data) { 
+        if(root->left==NULL)return NULL;
+        return findNode(root->left,data);}
+    else if(root->data<data) {
+        if(root->right==NULL)return NULL;
+        return findNode(root->right,data);}}
+TreeNode*findSuccessor(TreeNode*root){
+    while(root!=NULL&&root->left!=NULL)  root=root->left;
+    return root;}
+TreeNode* deleteNode(TreeNode*root,int data){
+    if(root==NULL) return NULL;
+    if(root->data>data){root->left=deleteNode(root->left,data);}
+    else if(root->data<data){root->right=deleteNode(root->right,data);}
+    else{if(root->left==NULL&&root->right==NULL){
+            free(root);return NULL;}
+        else if(root->left==NULL||root->right==NULL){
+            TreeNode*temp=(root->left==NULL?root->right:root->left);
+            free(root);return temp;}
+        else{
+            TreeNode*temp=findSuccessor(root->right);
+            root->data=temp->data;
+            root->right=deleteNode(root->right,temp->data);}
     }return root;}
-int search(struct Node* root, int key) {
-    if (root == NULL) return -1; 
-    if (root->key == key) return 1; 
-    else if (key < root->key) return search(root->left, key); 
-    else return search(root->right, key);}
-void inorderTraversal(struct Node* root) {
-    if (root != NULL) {
-        inorderTraversal(root->left);
-        printf("%d ", root->key);
-        inorderTraversal(root->right);}}
-void preorderTraversal(struct Node* root) {
-    if (root != NULL) {
-        printf("%d ", root->key);
-        preorderTraversal(root->left);
-        preorderTraversal(root->right);}}
-void postorderTraversal(struct Node* root) {
-    if (root != NULL) {
-        postorderTraversal(root->left);
-        postorderTraversal(root->right);
-        printf("%d ", root->key);}}
 int main() {
-    struct Node* root = NULL;
-    root = insert(root, 50);
-    root = insert(root, 30);
-    root = insert(root, 70);
-    printf("Inorder Traversal: ");
-    inorderTraversal(root);
-    printf("\n");
-    printf("Preorder Traversal: ");
-    preorderTraversal(root);
-    printf("\n");
-    printf("Postorder Traversal: ");
-    postorderTraversal(root);
-    printf("\n");
-    printf("Search Index of  %d: %d\n", 40, search(root, 40));
-    root = delete(root, 50);
-    printf("Inorder Traversal: ");
-    inorderTraversal(root);
+    Tree* tree = initilaize_tree();
+    tree->root = insertNode(tree->root, 9);
+    tree->root = insertNode(tree->root, 1);
+    tree->root = insertNode(tree->root, 6);
+    tree->root = insertNode(tree->root, 4);
+    tree->root = insertNode(tree->root, 7);
+    printf("In-order traversal : ");inorder(tree->root);
+    printf("\nPre-order traversal : ");preorder(tree->root);
+    printf("\nPost-order traversal : ");postorder(tree->root);
+    printf("\nDeleting node with data 9.");tree->root=deleteNode(tree->root,9);
+    printf("\nDeleting node with data 6.");tree->root=deleteNode(tree->root,6);
+    printf("\nIn-order traversal : ");inorder(tree->root);
+    printf("\nNode with data %d exists:%s",9,((findNode(tree->root,9)==NULL)?"No":"Yes"));
+    printf("\nNode with data %d exists:%s\n",7,((findNode(tree->root,7)==NULL)?"No":"Yes"));
 }
